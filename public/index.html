@@ -152,6 +152,75 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-wms部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="wms部署"><a href="#wms部署" class="headerlink" title=" wms部署"></a> wms部署</h2><p>##redis部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br><span class="line">docker pull redis</span><br><span class="line"><span class="comment">## 创建目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /home/redis/conf</span><br><span class="line"><span class="comment">## 创建文件</span></span><br><span class="line"><span class="built_in">touch</span> /home/redis/conf/redis.conf</span><br><span class="line">vim /home/redis/conf/redis.conf</span><br><span class="line">docker run --name redis -p 6379:6379 \</span><br><span class="line">-v /home/redis/data:/data \</span><br><span class="line">-v /home/redis/conf/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">-d redis:latest redis-server /etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>###redis配置文件，主要是密码和配置持久化</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">appendonly <span class="built_in">yes</span></span><br><span class="line">requirepass zr525010</span><br></pre></td></tr></table></figure>
+
+
+<p>##mysql部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/mysql/data /root/mysql/logs /root/mysql/conf</span><br><span class="line"><span class="built_in">touch</span> /root/mysql/conf/my.cnf</span><br><span class="line">docker run \</span><br><span class="line">--name mysql \</span><br><span class="line">-d \</span><br><span class="line">-p 3306:3306 \</span><br><span class="line">--restart unless-stopped \</span><br><span class="line">-v /root/mysql/conf:/etc/mysql/conf.d -v /root/mysql/logs:/var/log/mysql -v /root/mysql/data:/var/lib/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=admin \</span><br><span class="line">mysql:5.7.37</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>##java部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk-8u161-linux-x64.tar.gz</span><br><span class="line">vim /etc/profile</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/data/runtime/jdk1.8.0_161</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin</span><br><span class="line"><span class="comment">#让配置生效</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>###启动项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动项目</span></span><br><span class="line"><span class="built_in">nohup</span> java -jar yudao-server.jar \</span><br><span class="line">--spring.profiles.active=<span class="built_in">test</span> \</span><br><span class="line">--server.port=8091 \</span><br><span class="line">&gt;/dev/null 2&gt;&amp;1 &amp;</span><br><span class="line"><span class="comment">#停止项目</span></span><br><span class="line">ps -ef | grep yudao-server.jar | grep java | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span> -9</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>##nginx部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y pcre pcre-devel</span><br><span class="line">yum install -y zlib zlib-devel</span><br><span class="line">yum install -y openssl openssl-devel</span><br><span class="line"><span class="comment">#进入官网下载</span></span><br><span class="line">nginx.org</span><br><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="built_in">mkdir</span> nginx</span><br><span class="line">tar -zxvf nginx-1.16.1.tar.gz</span><br><span class="line"><span class="built_in">cd</span> /usr/local/nginx</span><br><span class="line">./configure --prefix=/usr/local/nginx</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">启动nginx</span><br><span class="line"><span class="built_in">cd</span> /usr/local/nginx</span><br><span class="line">./sbin/nginx</span><br><span class="line">重启</span><br><span class="line">./sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>###nginx配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length 1k;     <span class="comment"># 璁剧疆鍏佽鍘嬬缉鐨勯〉闈㈡渶灏忓瓧鑺傛暟</span></span><br><span class="line">    gzip_buffers 4 16k;     <span class="comment"># 鐢ㄦ潵瀛樺偍 gzip 鐨勫帇缂╃粨鏋</span></span><br><span class="line">    gzip_http_version 1.1;  <span class="comment"># 璇嗗埆 HTTP 鍗忚鐗堟湰</span></span><br><span class="line">    gzip_comp_level 2;      <span class="comment"># 璁剧疆 gzip 鐨勫帇缂╂瘮 1-9銆 鍘嬬缉姣旀渶灏忎絾鏈€蹇紝鑰9 鐩稿弽</span></span><br><span class="line">    gzip_types gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript; <span class="comment"># 鎸囧畾鍘嬬缉绫诲瀷</span></span><br><span class="line">    gzip_proxied any;       <span class="comment"># 鏃犺鍚庣鏈嶅姟鍣ㄧ殑 headers 澶磋繑鍥炰粈涔堜俊鎭紝閮芥棤鏉′欢鍚敤鍘嬬缉</span></span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       7000;</span><br><span class="line">        server_name  192.168.2.2; <span class="comment">## 閲嶈锛侊紒锛佷慨鏀规垚浣犵殑澶栫綉 IP/鍩熷悕</span></span><br><span class="line"></span><br><span class="line">        location / &#123; <span class="comment">## 鍓嶇椤圭洰</span></span><br><span class="line">            root   /data/project/web/dist;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line">        &#125;</span><br><span class="line">         location /proxy-api/ &#123;</span><br><span class="line">            proxy_pass http://192.168.2.2:8091/;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/04/18/wms%E9%83%A8%E7%BD%B2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-git常用操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -489,7 +558,7 @@
 <p> 首先生成公钥</p>
 <p>进入jinkins容器后执行</p>
 <p>docker exec -it jenkins bash</p>
-<p>ssh-keygen -t rsa -C ‘<a href="mailto:&#49;&#x35;&#48;&#49;&#57;&#x34;&#x37;&#x34;&#x39;&#53;&#x31;&#x40;&#49;&#x36;&#x33;&#x2e;&#99;&#111;&#x6d;">&#49;&#x35;&#48;&#49;&#57;&#x34;&#x37;&#x34;&#x39;&#53;&#x31;&#x40;&#49;&#x36;&#x33;&#x2e;&#99;&#111;&#x6d;</a>’</p>
+<p>ssh-keygen -t rsa -C ‘<a href="mailto:&#x31;&#53;&#x30;&#49;&#x39;&#x34;&#x37;&#x34;&#x39;&#53;&#49;&#64;&#x31;&#54;&#51;&#x2e;&#99;&#x6f;&#x6d;">&#x31;&#53;&#x30;&#49;&#x39;&#x34;&#x37;&#x34;&#x39;&#53;&#49;&#64;&#x31;&#54;&#51;&#x2e;&#99;&#x6f;&#x6d;</a>’</p>
 <p>cat ~/.ssh/id_rsa.pub</p>
 <h4 id="将公钥填入"><a href="#将公钥填入" class="headerlink" title="将公钥填入"></a>将公钥填入</h4><p><img src="images/20220822-2.png"></p>
 <p>新建一个自由风格项目</p>
@@ -507,7 +576,7 @@
 <p>这里的shell命令就是删除原来的进程然后构建</p>
 <h2 id="webhook配置"><a href="#webhook配置" class="headerlink" title="webhook配置"></a>webhook配置</h2><h4 id="webhook配置-1"><a href="#webhook配置-1" class="headerlink" title="webhook配置"></a>webhook配置</h4><p>\1.   安装<strong>Generic Webhook Trigger</strong>插件</p>
 <p>\2.   加入git的公钥到jenkins</p>
-<p>\3.   生成key  ssh-keygen -t rsa -C ‘<a href="mailto:&#x31;&#x35;&#x31;&#x37;&#x32;&#53;&#51;&#55;&#48;&#52;&#x39;&#64;&#x31;&#54;&#x33;&#46;&#99;&#x6f;&#109;">&#x31;&#x35;&#x31;&#x37;&#x32;&#53;&#51;&#55;&#48;&#52;&#x39;&#64;&#x31;&#54;&#x33;&#46;&#99;&#x6f;&#109;</a>‘ cat ~/.ssh/id_rsa.pub</p>
+<p>\3.   生成key  ssh-keygen -t rsa -C ‘<a href="mailto:&#x31;&#x35;&#49;&#55;&#50;&#53;&#x33;&#x37;&#x30;&#52;&#57;&#x40;&#49;&#x36;&#51;&#x2e;&#99;&#x6f;&#109;">&#x31;&#x35;&#49;&#55;&#50;&#53;&#x33;&#x37;&#x30;&#52;&#57;&#x40;&#49;&#x36;&#51;&#x2e;&#99;&#x6f;&#109;</a>‘ cat ~/.ssh/id_rsa.pub</p>
 <p>\4.    将构建触发器勾上!<img src="images/20220822-9.png"></p>
 <p>\5.                 </p>
 <p>配置apitoken，这里是后面APItoken的地址</p>
@@ -583,7 +652,7 @@
         <h1 id="部署ruoyi前后端分离版"><a href="#部署ruoyi前后端分离版" class="headerlink" title="部署ruoyi前后端分离版"></a>部署ruoyi前后端分离版</h1><h3 id="此步骤在不分离版后延续"><a href="#此步骤在不分离版后延续" class="headerlink" title="此步骤在不分离版后延续"></a>此步骤在不分离版后延续</h3><h3 id="redis启动"><a href="#redis启动" class="headerlink" title="redis启动"></a>redis启动</h3><p>docker pull redis:latest<br>docker run -d –rm -v /root/redis/data:/data –name redis -p 6379:6379 redis  redis-server  –appendonly yes</p>
 <h3 id="nodejs"><a href="#nodejs" class="headerlink" title="nodejs"></a>nodejs</h3><p>cd /data/tmp<br>tar -zxvf node-v14.15.5-linux-x64.tar.gz<br>mv node-v14.15.5-linux-x64 /data/service<br>cd /data/service<br>ll<br>配置环境变量<br>vim /etc/profile<br>export NODEJS_HOME=/data/service/node-v14.15.5-linux-x64<br>export PATH=$PATH:$NODEJS_HOME/bin<br>source /etc/profile</p>
 <h3 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h3><p>cd /data/tmp<br>tar zxvf nginx-1.18.0.tar.gz<br>cd nginx-1.18.0<br>./configure –prefix=/data/service/ngnix<br>make &amp;&amp; make install<br>/data/service/ngnix/sbin/nginx</p>
-<h3 id="git拉代码并修改配置文件，打包"><a href="#git拉代码并修改配置文件，打包" class="headerlink" title="git拉代码并修改配置文件，打包"></a>git拉代码并修改配置文件，打包</h3><p>cd /data/gitee<br>git clone <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#109;">&#x67;&#105;&#116;&#x40;&#x67;&#105;&#x74;&#101;&#101;&#x2e;&#99;&#111;&#109;</a>:y_project/RuoYi-Vue.git<br>cd /data/gitee/RuoYi-Vue/ruoyi-admin/src/main/resources/<br>#修改application.yml的项目启动端口号与文件上传路径<br>vim application.yml<br>#修改application-druid.yml的数据源<br>vim application-druid.yml<br>cd /data/gitee/RuoYi-Vue/<br>mvn clean install -pl com.ruoyi:ruoyi-admin -am<br>mkdir -p /data/app/ruoyi-vue<br>cp /data/gitee/RuoYi-Vue/ruoyi-admin/target/ruoyi-admin.jar /data/app/ruoyi-vue/ruoyi-admin.jar<br>cd /data/app/ruoyi-vue/<br>#后台启动项目<br>nohup java -jar ruoyi-admin.jar &amp;<br>#查看项目运行日志<br>tail -f nohup.out</p>
+<h3 id="git拉代码并修改配置文件，打包"><a href="#git拉代码并修改配置文件，打包" class="headerlink" title="git拉代码并修改配置文件，打包"></a>git拉代码并修改配置文件，打包</h3><p>cd /data/gitee<br>git clone <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#111;&#x6d;">&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#111;&#x6d;</a>:y_project/RuoYi-Vue.git<br>cd /data/gitee/RuoYi-Vue/ruoyi-admin/src/main/resources/<br>#修改application.yml的项目启动端口号与文件上传路径<br>vim application.yml<br>#修改application-druid.yml的数据源<br>vim application-druid.yml<br>cd /data/gitee/RuoYi-Vue/<br>mvn clean install -pl com.ruoyi:ruoyi-admin -am<br>mkdir -p /data/app/ruoyi-vue<br>cp /data/gitee/RuoYi-Vue/ruoyi-admin/target/ruoyi-admin.jar /data/app/ruoyi-vue/ruoyi-admin.jar<br>cd /data/app/ruoyi-vue/<br>#后台启动项目<br>nohup java -jar ruoyi-admin.jar &amp;<br>#查看项目运行日志<br>tail -f nohup.out</p>
 <h3 id="启动前端项目"><a href="#启动前端项目" class="headerlink" title="启动前端项目"></a>启动前端项目</h3><p>1、下载依赖并打包<br>cd /data/gitee/RuoYi-Vue/ruoyi-ui<br>npm install –registry=<a target="_blank" rel="noopener" href="https://registry.npmmirror.com/">https://registry.npmmirror.com</a><br>npm install<br>mkdir /data/app/ruoyi-ui<br>mv dist/* /data/app/ruoyi-ui/</p>
 <h3 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h3><p>此处/代表根目录 root配置的dist的明确地址</p>
 <p>/prod-api/配置的是转发路径，及前端请求都转发到 localhost:18081地址</p>
@@ -640,7 +709,7 @@
 <h3 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h3><p>java<br>cd /data/tmp<br>tar -zxvf jdk-8u212-linux-x64.tar.gz<br>mv jdk1.8.0_212 /data/service<br>cd /data/service<br>ll<br>vim /etc/profile<br>export JAVA_HOME=/data/service/jdk1.8.0_212<br>export PATH=$PATH:$JAVA_HOME/bin<br>source /etc/profile</p>
 <h3 id="安装maven"><a href="#安装maven" class="headerlink" title="安装maven"></a>安装maven</h3><p>cd /data/tmp<br>tar -zxvf apache-maven-3.8.5-bin.tar.gz<br>mv apache-maven-3.8.5 /data/service<br>cd /data/service<br>ll<br>vim /etc/profile<br>export MAVEN_HOME=/data/service/apache-maven-3.8.5<br>export PATH=$PATH:$MAVEN_HOME/bin<br>source /etc/profile<br>vim /data/service/apache-maven-3.8.5/conf/setting.xml<br>#配置本地仓库<br><localRepository>/data/service/apache-maven-3.8.5/repository</localRepository><br>#配置阿里云镜像<br><mirror><br>  <id>aliyunmaven</id><br>  <mirrorOf>*</mirrorOf><br>  <name>阿里云公共仓库</name><br>  <url><a target="_blank" rel="noopener" href="https://maven.aliyun.com/repository/public">https://maven.aliyun.com/repository/public</a></url><br></mirror></p>
 <h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>yum -y groupinstall “Development Tools”<br>yum install wget unzip gettext-devel openssl-devel perl-CPAN perl-devel zlib-devel libcurl-devel expat-devel -y<br>cd /data/tmp<br>tar zxvf git-2.18.0.tar.gz<br>cd git-2.18.0<br>./configure –prefix=/data/service/git<br>make &amp;&amp; make install<br>vim /etc/profile<br>export GIT_HOME=/data/service/git<br>export PATH=$PATH:$GIT_HOME/bin<br>source /etc/profile</p>
-<h3 id="git公钥，和下载项目"><a href="#git公钥，和下载项目" class="headerlink" title="git公钥，和下载项目"></a>git公钥，和下载项目</h3><p>git密匙<br>ssh-keygen -t rsa -C “<a href="mailto:&#49;&#53;&#x31;&#55;&#50;&#53;&#x33;&#55;&#48;&#x34;&#x39;&#64;&#49;&#x36;&#51;&#x2e;&#99;&#111;&#109;">&#49;&#53;&#x31;&#55;&#50;&#53;&#x33;&#55;&#48;&#x34;&#x39;&#64;&#49;&#x36;&#51;&#x2e;&#99;&#111;&#109;</a>“<br>cat ~/.ssh/id_rsa.pub<br>//粘到公匙<br>ssh -T <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#x63;&#111;&#x6d;">&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#101;&#101;&#x2e;&#x63;&#111;&#x6d;</a><br>cd /data/gitee<br>git clone <a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x65;&#101;&#x2e;&#x63;&#111;&#x6d;">&#103;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x65;&#101;&#x2e;&#x63;&#111;&#x6d;</a>:y_project/RuoYi.git</p>
+<h3 id="git公钥，和下载项目"><a href="#git公钥，和下载项目" class="headerlink" title="git公钥，和下载项目"></a>git公钥，和下载项目</h3><p>git密匙<br>ssh-keygen -t rsa -C “<a href="mailto:&#x31;&#x35;&#49;&#x37;&#x32;&#x35;&#x33;&#55;&#x30;&#52;&#x39;&#64;&#x31;&#54;&#51;&#x2e;&#x63;&#111;&#x6d;">&#x31;&#x35;&#49;&#x37;&#x32;&#x35;&#x33;&#55;&#x30;&#52;&#x39;&#64;&#x31;&#54;&#51;&#x2e;&#x63;&#111;&#x6d;</a>“<br>cat ~/.ssh/id_rsa.pub<br>//粘到公匙<br>ssh -T <a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#x69;&#x74;&#101;&#x65;&#46;&#x63;&#x6f;&#x6d;</a><br>cd /data/gitee<br>git clone <a href="mailto:&#x67;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#99;&#x6f;&#109;">&#x67;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#x65;&#x65;&#46;&#99;&#x6f;&#109;</a>:y_project/RuoYi.git</p>
 <h3 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h3><p>docker安装<br>sudo yum remove docker <br>                  docker-client <br>                  docker-client-latest <br>                  docker-common <br>                  docker-latest <br>                  docker-latest-logrotate <br>                  docker-logrotate <br>                  docker-engine<br>sudo yum install -y yum-utils device-mapper-persistent-data lvm2<br>sudo yum-config-manager <br>    –add-repo <br>    <a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</a><br>yum install -y <a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm">https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/edge/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm</a><br>yum install docker-ce docker-ce-cli -y<br>sudo mkdir -p /etc/docker<br>sudo tee /etc/docker/daemon.json &lt;&lt;-‘EOF’<br>{<br>  “registry-mirrors”: [“<a href="https://plb9xzjh.mirror.aliyuncs.com&quot;]">https://plb9xzjh.mirror.aliyuncs.com&quot;]</a><br>}<br>EOF<br>sudo systemctl daemon-reload<br>sudo systemctl restart docker</p>
 <h3 id="mysql安装"><a href="#mysql安装" class="headerlink" title="mysql安装"></a>mysql安装</h3><p>docker pull mysql:5.7.30<br>mkdir -p /root/mysql/data /root/mysql/logs /root/mysql/conf<br>touch /root/mysql/conf/my.cnf<br>//密码是admin，-v则是挂载 –name容器名字，作为后面的启动删除名字<br>docker run -p 3306:3306 –rm –name mysql -v /root/mysql/conf:/etc/mysql/conf.d -v /root/mysql/logs:/var/log/mysql -v /root/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=admin -d mysql:5.7.30<br>docker start mysql<br>//进入容器<br>docker exec -it mysql /bin/bash<br>#登录docker容器（方式参考上方文档）后登录mysql<br>mysql -uroot -padmin<br>#修改登录者的权限<br>GRANT ALL ON <em>.</em> TO ‘root‘@’%’;<br>#刷新命令生效<br> flush privileges;</p>
 <h3 id="修改项目配置"><a href="#修改项目配置" class="headerlink" title="修改项目配置"></a>修改项目配置</h3><p>cd /data/gitee/RuoYi/ruoyi-admin/src/main/resources/<br>#修改application.yml的项目启动端口号与文件上传路径<br>vim application.yml<br>#修改application-druid.yml的数据源<br>vim application-druid.yml</p>
@@ -799,79 +868,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2022/07/15/%E7%AE%97%E6%B3%95-%E5%9B%9E%E6%BA%AF%E6%80%BB%E7%BB%93/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-算法-双指针和hashmap的运用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="算法-双指针和hashmap的运用"><a href="#算法-双指针和hashmap的运用" class="headerlink" title="算法-双指针和hashmap的运用"></a>算法-双指针和hashmap的运用</h1><h3 id="1-两数之和"><a href="#1-两数之和" class="headerlink" title="1.两数之和"></a>1.两数之和</h3><p>给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。</p>
-<p>你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。</p>
-<p>给定 nums = [2, 7, 11, 15], target = 9</p>
-<p>因为 nums[0] + nums[1] = 2 + 7 = 9</p>
-<p>所以返回 [0, 1]</p>
-<h3 id="个人思路"><a href="#个人思路" class="headerlink" title="个人思路"></a>个人思路</h3><p>遍历数组，计算和目标的差额temp，并把数组放入hashmap，调用hashmap.put(nums[i],i)方法，如果hashmap中包含temp这个key，则是一种答案</p>
-<p><img src="images/220714-1.png"></p>
-<h3 id="2-最长回文子串"><a href="#2-最长回文子串" class="headerlink" title="2.最长回文子串"></a>2.最长回文子串</h3><p>给你一个字符串 s，找到 s 中最长的回文子串。</p>
-<p>示例 1：</p>
-<ul>
-<li><p>输入：s = “babad”</p>
-</li>
-<li><p>输出：”bab”</p>
-</li>
-<li><p>解释：”aba” 同样是符合题意的答案。</p>
-<h4 id="个人思路-1"><a href="#个人思路-1" class="headerlink" title="个人思路"></a>个人思路</h4><p>遍历字符串，每种i代表以什么为中心，分两种情况，一种是一个字符为中心朝两边扩展 ，如“bab”，中心是a，第二种是以两个字符为中心像两边扩展，如“baab”，中心是aa，创建extend（String s,int start,int end）方法，其中start，end方法代表字符截取的下标，如果s.chartAT(start)==s.chartAT(end)则start–，end++，最后返回最长的那个即是答案。</p>
-</li>
-</ul>
-<p><img src="/images/220714-2.png"></p>
-<h3 id="3-三数之和"><a href="#3-三数之和" class="headerlink" title="3.三数之和"></a>3.三数之和</h3><p>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。</p>
-<p><strong>注意：</strong> 答案中不可以包含重复的三元组。</p>
-<p>示例：</p>
-<p>给定数组 nums = [-1, 0, 1, 2, -1, -4]，</p>
-<p>满足要求的三元组集合为：<br>[<br>  [-1, 0, 1],<br>  [-1, -1, 2]<br>]</p>
-<h4 id="个人思路-2"><a href="#个人思路-2" class="headerlink" title="个人思路"></a>个人思路</h4><p>遍历 字符串，i下表表示第一个数字索引，剩下两个两个数一个为i+1，一个为length-1，如果 nums【i】+nums【left】+nums【right】大于0，则 right–，否则left++；如果等于0，则right–，left++；另外等于0时候，则要考虑重复，如果这个 nums【right】==nums【right+1】则right–，就会去除重复</p>
-<p><img src="images/220714-3.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/07/14/%E7%AE%97%E6%B3%95-%E5%8F%8C%E6%8C%87%E9%92%88%E5%92%8Chashmap%E7%9A%84%E8%BF%90%E7%94%A8/">展开全文 >></a>
         </p>
       
 

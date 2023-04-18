@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="wms部署##redis部署 1234567891011setenforce 0docker pull redis## 创建目录mkdir -p &#x2F;home&#x2F;redis&#x2F;conf## 创建文件touch &#x2F;home&#x2F;redis&#x2F;conf&#x2F;redis.confvim &#x2F;home&#x2F;redis&#x2F;conf&#x2F;redis.confdocker run --name redis -p 6379:6379 \">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/page/2/index.html">
+<meta property="og:url" content="http://example.com/2023/04/18/wms%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="wms部署##redis部署 1234567891011setenforce 0docker pull redis## 创建目录mkdir -p &#x2F;home&#x2F;redis&#x2F;conf## 创建文件touch &#x2F;home&#x2F;redis&#x2F;conf&#x2F;redis.confvim &#x2F;home&#x2F;redis&#x2F;conf&#x2F;redis.confdocker run --name redis -p 6379:6379 \">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-18T14:59:38.595Z">
+<meta property="article:modified_time" content="2023-04-18T14:59:28.276Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -150,151 +154,174 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-wms部署" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="wms部署"><a href="#wms部署" class="headerlink" title=" wms部署"></a> wms部署</h2><p>##redis部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br><span class="line">docker pull redis</span><br><span class="line"><span class="comment">## 创建目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /home/redis/conf</span><br><span class="line"><span class="comment">## 创建文件</span></span><br><span class="line"><span class="built_in">touch</span> /home/redis/conf/redis.conf</span><br><span class="line">vim /home/redis/conf/redis.conf</span><br><span class="line">docker run --name redis -p 6379:6379 \</span><br><span class="line">-v /home/redis/data:/data \</span><br><span class="line">-v /home/redis/conf/redis.conf:/etc/redis/redis.conf \</span><br><span class="line">-d redis:latest redis-server /etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>###redis配置文件，主要是密码和配置持久化</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">appendonly <span class="built_in">yes</span></span><br><span class="line">requirepass zr525010</span><br></pre></td></tr></table></figure>
+
+
+<p>##mysql部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /root/mysql/data /root/mysql/logs /root/mysql/conf</span><br><span class="line"><span class="built_in">touch</span> /root/mysql/conf/my.cnf</span><br><span class="line">docker run \</span><br><span class="line">--name mysql \</span><br><span class="line">-d \</span><br><span class="line">-p 3306:3306 \</span><br><span class="line">--restart unless-stopped \</span><br><span class="line">-v /root/mysql/conf:/etc/mysql/conf.d -v /root/mysql/logs:/var/log/mysql -v /root/mysql/data:/var/lib/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=admin \</span><br><span class="line">mysql:5.7.37</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>##java部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk-8u161-linux-x64.tar.gz</span><br><span class="line">vim /etc/profile</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/data/runtime/jdk1.8.0_161</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin</span><br><span class="line"><span class="comment">#让配置生效</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>###启动项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动项目</span></span><br><span class="line"><span class="built_in">nohup</span> java -jar yudao-server.jar \</span><br><span class="line">--spring.profiles.active=<span class="built_in">test</span> \</span><br><span class="line">--server.port=8091 \</span><br><span class="line">&gt;/dev/null 2&gt;&amp;1 &amp;</span><br><span class="line"><span class="comment">#停止项目</span></span><br><span class="line">ps -ef | grep yudao-server.jar | grep java | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span> -9</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>##nginx部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y pcre pcre-devel</span><br><span class="line">yum install -y zlib zlib-devel</span><br><span class="line">yum install -y openssl openssl-devel</span><br><span class="line"><span class="comment">#进入官网下载</span></span><br><span class="line">nginx.org</span><br><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="built_in">mkdir</span> nginx</span><br><span class="line">tar -zxvf nginx-1.16.1.tar.gz</span><br><span class="line"><span class="built_in">cd</span> /usr/local/nginx</span><br><span class="line">./configure --prefix=/usr/local/nginx</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">启动nginx</span><br><span class="line"><span class="built_in">cd</span> /usr/local/nginx</span><br><span class="line">./sbin/nginx</span><br><span class="line">重启</span><br><span class="line">./sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>###nginx配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length 1k;     <span class="comment"># 璁剧疆鍏佽鍘嬬缉鐨勯〉闈㈡渶灏忓瓧鑺傛暟</span></span><br><span class="line">    gzip_buffers 4 16k;     <span class="comment"># 鐢ㄦ潵瀛樺偍 gzip 鐨勫帇缂╃粨鏋</span></span><br><span class="line">    gzip_http_version 1.1;  <span class="comment"># 璇嗗埆 HTTP 鍗忚鐗堟湰</span></span><br><span class="line">    gzip_comp_level 2;      <span class="comment"># 璁剧疆 gzip 鐨勫帇缂╂瘮 1-9銆 鍘嬬缉姣旀渶灏忎絾鏈€蹇紝鑰9 鐩稿弽</span></span><br><span class="line">    gzip_types gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript; <span class="comment"># 鎸囧畾鍘嬬缉绫诲瀷</span></span><br><span class="line">    gzip_proxied any;       <span class="comment"># 鏃犺鍚庣鏈嶅姟鍣ㄧ殑 headers 澶磋繑鍥炰粈涔堜俊鎭紝閮芥棤鏉′欢鍚敤鍘嬬缉</span></span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       7000;</span><br><span class="line">        server_name  192.168.2.2; <span class="comment">## 閲嶈锛侊紒锛佷慨鏀规垚浣犵殑澶栫綉 IP/鍩熷悕</span></span><br><span class="line"></span><br><span class="line">        location / &#123; <span class="comment">## 鍓嶇椤圭洰</span></span><br><span class="line">            root   /data/project/web/dist;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line">        &#125;</span><br><span class="line">         location /proxy-api/ &#123;</span><br><span class="line">            proxy_pass http://192.168.2.2:8091/;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/07/14/%E7%AE%97%E6%B3%95-%E5%8F%8C%E6%8C%87%E9%92%88%E5%92%8Chashmap%E7%9A%84%E8%BF%90%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2022-07-14T08:26:47.912Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2023/04/18/wms%E9%83%A8%E7%BD%B2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/07/08/token%E7%9A%84%E4%B8%80%E7%82%B9%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/" class="archive-article-date">
-  	<time datetime="2022-07-08T15:12:08.053Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-08</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/07/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="archive-article-date">
-  	<time datetime="2022-07-07T12:45:30.724Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-07</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+  
+    <a href="/2023/03/08/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/07/07/ThreadPoolExecutor%20%E7%B1%BB%E5%88%86%E6%9E%90/" class="archive-article-date">
-  	<time datetime="2022-07-07T11:59:47.199Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-07</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/07/07/%E9%80%92%E5%BD%92%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/" class="archive-article-date">
-  	<time datetime="2022-07-07T11:11:15.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-07</time>
-</a>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#wms%E9%83%A8%E7%BD%B2"><span class="toc-number">1.</span> <span class="toc-text"> wms部署</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/06/15/%E8%8B%A5%E4%BE%9D%E9%A1%B9%E7%9B%AE%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%83%A8%E7%BD%B2/" class="archive-article-date">
-  	<time datetime="2022-06-15T08:32:27.658Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-15</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&amp;laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -318,8 +345,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

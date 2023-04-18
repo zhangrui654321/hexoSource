@@ -152,6 +152,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-算法-双指针和hashmap的运用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="算法-双指针和hashmap的运用"><a href="#算法-双指针和hashmap的运用" class="headerlink" title="算法-双指针和hashmap的运用"></a>算法-双指针和hashmap的运用</h1><h3 id="1-两数之和"><a href="#1-两数之和" class="headerlink" title="1.两数之和"></a>1.两数之和</h3><p>给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。</p>
+<p>你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。</p>
+<p>给定 nums = [2, 7, 11, 15], target = 9</p>
+<p>因为 nums[0] + nums[1] = 2 + 7 = 9</p>
+<p>所以返回 [0, 1]</p>
+<h3 id="个人思路"><a href="#个人思路" class="headerlink" title="个人思路"></a>个人思路</h3><p>遍历数组，计算和目标的差额temp，并把数组放入hashmap，调用hashmap.put(nums[i],i)方法，如果hashmap中包含temp这个key，则是一种答案</p>
+<p><img src="images/220714-1.png"></p>
+<h3 id="2-最长回文子串"><a href="#2-最长回文子串" class="headerlink" title="2.最长回文子串"></a>2.最长回文子串</h3><p>给你一个字符串 s，找到 s 中最长的回文子串。</p>
+<p>示例 1：</p>
+<ul>
+<li><p>输入：s = “babad”</p>
+</li>
+<li><p>输出：”bab”</p>
+</li>
+<li><p>解释：”aba” 同样是符合题意的答案。</p>
+<h4 id="个人思路-1"><a href="#个人思路-1" class="headerlink" title="个人思路"></a>个人思路</h4><p>遍历字符串，每种i代表以什么为中心，分两种情况，一种是一个字符为中心朝两边扩展 ，如“bab”，中心是a，第二种是以两个字符为中心像两边扩展，如“baab”，中心是aa，创建extend（String s,int start,int end）方法，其中start，end方法代表字符截取的下标，如果s.chartAT(start)==s.chartAT(end)则start–，end++，最后返回最长的那个即是答案。</p>
+</li>
+</ul>
+<p><img src="/images/220714-2.png"></p>
+<h3 id="3-三数之和"><a href="#3-三数之和" class="headerlink" title="3.三数之和"></a>3.三数之和</h3><p>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。</p>
+<p><strong>注意：</strong> 答案中不可以包含重复的三元组。</p>
+<p>示例：</p>
+<p>给定数组 nums = [-1, 0, 1, 2, -1, -4]，</p>
+<p>满足要求的三元组集合为：<br>[<br>  [-1, 0, 1],<br>  [-1, -1, 2]<br>]</p>
+<h4 id="个人思路-2"><a href="#个人思路-2" class="headerlink" title="个人思路"></a>个人思路</h4><p>遍历 字符串，i下表表示第一个数字索引，剩下两个两个数一个为i+1，一个为length-1，如果 nums【i】+nums【left】+nums【right】大于0，则 right–，否则left++；如果等于0，则right–，left++；另外等于0时候，则要考虑重复，如果这个 nums【right】==nums【right+1】则right–，就会去除重复</p>
+<p><img src="images/220714-3.png"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/07/14/%E7%AE%97%E6%B3%95-%E5%8F%8C%E6%8C%87%E9%92%88%E5%92%8Chashmap%E7%9A%84%E8%BF%90%E7%94%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-token的一点个人总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -409,7 +482,7 @@
 <h5 id="重启nginx-1"><a href="#重启nginx-1" class="headerlink" title="重启nginx"></a>重启nginx</h5><p> // cd /data/tmp<br>make install<br>/data/service/ngnix/sbin/nginx</p>
 <h5 id="Jenkins安装"><a href="#Jenkins安装" class="headerlink" title="#Jenkins安装"></a>#Jenkins安装</h5><p>docker pull jenkinsci/blueocean<br>docker run –name jenkins -u root –rm  -d -p 7005:8080 -p 50000:50000 -v /data/service/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /data/service/apache-maven-3.8.5:/usr/local/maven -v /data/service/jdk1.8.0_212:/usr/local/jdk jenkinsci/blueocean<br>-u root：以 root 权限启动，防止出现权限问题<br>-p 7005:8080：端口映射，服务器的 7005 端口映射容器的 8080 端口<br>-p 50000:50000：Jenkins代理默认通过TCP端口50000与Jenkins主机通信<br>-v /data/jenkins:/var/jenkins_home：把容器内的 Jenkins 目录挂载到服务器的 /data/jenkins 目录以防容器没了，数据也没了<br>-v /var/run/docker.sock:/var/run/docker.sock：保证容器内的 docker 与 服务器上 docker 的通讯<br> 附带下删除 jenkinsci/blueocean 容器<br> 删除对应绑定网桥<br>docker network disconnect –force bridge jenkinsci-blueocean<br> 删除 jenkinsci-blueocean 容器，xxxx  容器 ID<br>docker rm -f xxxx<br>查看密码 ，目录文件为/data/service/Jenkins<br>cat /data/service/jenkins/secrets/initialAdminPassword<br>Jenkisn部署项目</p>
 <p>1.全局工作配置<br>这里的java_home 路劲是docker挂载 路径，这里的maven路进是挂载路径<br>注意：只用修改java和maven，git是已经有的<br>2.插件安装<br>搜索 Publish over SSH 插件安装，搜索 Maven Integration 插件安装<br>3.ssh连接<br>在系统设置下配置远程连接，这里我配置主机地址<br>4.进入git项目配置</p>
-<p>首先生成公钥<br>进入jinkins容器后执行<br>Docker exec -it dockerid bash<br>ssh-keygen -t rsa -C ‘<a href="mailto:&#49;&#x35;&#x30;&#x31;&#x39;&#x34;&#55;&#52;&#x39;&#53;&#x31;&#x40;&#49;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;">&#49;&#x35;&#x30;&#x31;&#x39;&#x34;&#55;&#52;&#x39;&#53;&#x31;&#x40;&#49;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;</a>’<br>cat ~/.ssh/id_rsa.pub<br>将公钥粘入gitee<br> 在安全认证中把公钥加入<br>5，进入项目配置悬念则git仓库，选择刚才配置公钥</p>
+<p>首先生成公钥<br>进入jinkins容器后执行<br>Docker exec -it dockerid bash<br>ssh-keygen -t rsa -C ‘<a href="mailto:&#49;&#53;&#48;&#x31;&#57;&#x34;&#x37;&#52;&#57;&#x35;&#49;&#64;&#x31;&#54;&#x33;&#46;&#x63;&#x6f;&#x6d;">&#49;&#53;&#48;&#x31;&#57;&#x34;&#x37;&#52;&#57;&#x35;&#49;&#64;&#x31;&#54;&#x33;&#46;&#x63;&#x6f;&#x6d;</a>’<br>cat ~/.ssh/id_rsa.pub<br>将公钥粘入gitee<br> 在安全认证中把公钥加入<br>5，进入项目配置悬念则git仓库，选择刚才配置公钥</p>
 <p> .选择<br>6.选择ssh接入<br>下面的shell如下<br>cd /root/data/test<br>id=$(ps -ef | grep “ruoyi-admin.jar”  | grep -v grep| awk ‘{print $2}’)<br>echo $id<br>kill -9 $id<br>nohup /data/service/jdk1.8.0_212/bin/java -jar ruoyi-admin.jar &gt;myout.log 2&gt;&amp;1 &amp;<br>注意，这里一定要指定java执行路径 这里是/data/service/jdk1.8.0_212/bin/java，这是个大坑, 这里的远程目录是在/root下，即如果配置/data/test,则最终路径是在/root/data/test<br>部署gitlab<br>docker pull gitlab/gitlab-ce<br>docker run -d  -p 443:443 -p 80:80 -p 222:22 –name gitlab –restart always -v /root/gitlab/config:/etc/gitlab -v /root/gitlab/logs:/var/log/gitlab -v /root/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce</p>
 <h6 id="gitlab-rb文件内容默认全是注释"><a href="#gitlab-rb文件内容默认全是注释" class="headerlink" title="gitlab.rb文件内容默认全是注释"></a>gitlab.rb文件内容默认全是注释</h6><p>$ vim /root/gitlab/config/gitlab.rb</p>
 <h6 id="配置http协议所使用的访问地址-不加端口号默认为80"><a href="#配置http协议所使用的访问地址-不加端口号默认为80" class="headerlink" title="配置http协议所使用的访问地址,不加端口号默认为80"></a>配置http协议所使用的访问地址,不加端口号默认为80</h6><p>external_url ‘<a target="_blank" rel="noopener" href="http://192.168.2.2&/#39;">http://192.168.2.2&#39;</a></p>
@@ -418,7 +491,7 @@
 <ol>
 <li>   安装Generic Webhook Trigger插件</li>
 <li>   加入git的公钥到jenkins</li>
-<li>   生成key    ssh-keygen -t rsa -C ‘<a href="mailto:&#49;&#53;&#49;&#55;&#50;&#x35;&#x33;&#x37;&#x30;&#52;&#x39;&#64;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">&#49;&#53;&#49;&#55;&#50;&#x35;&#x33;&#x37;&#x30;&#52;&#x39;&#64;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;</a>‘ cat ~/.ssh/id_rsa.pub</li>
+<li>   生成key    ssh-keygen -t rsa -C ‘<a href="mailto:&#49;&#x35;&#x31;&#x37;&#x32;&#x35;&#x33;&#55;&#48;&#x34;&#57;&#64;&#49;&#x36;&#x33;&#x2e;&#99;&#x6f;&#x6d;">&#49;&#x35;&#x31;&#x37;&#x32;&#x35;&#x33;&#55;&#48;&#x34;&#57;&#64;&#49;&#x36;&#x33;&#x2e;&#99;&#x6f;&#x6d;</a>‘ cat ~/.ssh/id_rsa.pub</li>
 <li></li>
 <li></li>
 </ol>
